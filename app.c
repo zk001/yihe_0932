@@ -416,8 +416,8 @@ void set_led_level_on(u32 leds)
   u32 ledoff;
 
   if(low_power){
-    leds &= ~LED_SHUIWEN_INDICATE_BLUE;
-    ledoff = leds ^ (HAL_LED_ALL & ~LED_SHUIWEN_INDICATE_BLUE);
+    leds &= ~(LED_SHUIWEN_INDICATE_BLUE | LED_SHUIWEN_INDICATE_RED);
+    ledoff = leds ^ (HAL_LED_ALL & ~(LED_SHUIWEN_INDICATE_BLUE | LED_SHUIWEN_INDICATE_RED));
     HalLedSet (ledoff, HAL_LED_MODE_OFF);
   }else{
     ledoff = leds ^ HAL_LED_ALL;
@@ -937,7 +937,7 @@ void long_m_key_tingzhi_yonghuduima()
 
   HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
 
-  HalLedBlink (LED_SHUIWEN_INDICATE_RED | LED_ZUOWEN_INDICATE_RED | LED_FENGWEN_INDICATE_RED, 30, 50, MS2TICK(1000));
+  HalLedBlink (LED_SHUIWEN_INDICATE_RED | LED_ZUOWEN_INDICATE_RED | LED_FENGWEN_INDICATE_RED, 30, 50, MS2TICK(930));
 
   fix_pack_with_user_value(&rf_pack, DUIMA);
 
@@ -947,7 +947,7 @@ void long_m_key_tingzhi_yonghuduima()
     if(!HalLedUpdate(NULL)){
       rf_8359_set_tx();
       clr_app_read_key_flag();
-      reload_sys_time();
+      //reload_sys_time();
       return;
     }
 
@@ -966,7 +966,7 @@ void long_m_key_tingzhi_yonghuduima()
         uid = new_id;
         clr_app_read_key_flag();
         HalLedBlink (LED_SHUIWEN_INDICATE_RED | LED_ZUOWEN_INDICATE_RED | LED_FENGWEN_INDICATE_RED, 1, 100, MS2TICK(5000));
-        reload_sys_time();
+        // reload_sys_time();
         return;
       }
     }
@@ -1017,14 +1017,14 @@ void app_init()
   register_key_event(M_KEY_PENZUI_DOWN,       0, 0, 0, SHORT_KEY_IMMEDIATELY, short_m_key_penzui_down_penzui_down);
 
   register_key_event(M_KEY_YONGHU_1, 0, 0, 0, SHORT_KEY_IMMEDIATELY, app_low_bat_check);
-  register_key_event(M_KEY_YONGHU_1, 0, MS2TICK(3000), 0, SHORT_KEY, short_m_key_yonghu1_yonghuxianshi);
-  register_key_event(M_KEY_YONGHU_1, 0, MS2TICK(5000), 0, LONG_KEY,  long_m_key_yonghu1_yonghujiyi);
+  register_key_event(M_KEY_YONGHU_1, 0, MS2TICK(2000), 0, SHORT_KEY, short_m_key_yonghu1_yonghuxianshi);
+  register_key_event(M_KEY_YONGHU_1, 0, MS2TICK(3000), 0, LONG_KEY,  long_m_key_yonghu1_yonghujiyi);
 
   register_key_event(M_KEY_PAOMO,    0, 0, 0, SHORT_KEY_IMMEDIATELY, app_low_bat_check);
-  register_key_event(M_KEY_PAOMO,    0, MS2TICK(3000), 0, SHORT_KEY, short_m_key_paomo_paomo_duan);
-  register_key_event(M_KEY_PAOMO,    0, MS2TICK(5000), 0, LONG_KEY,  long_m_key_paomo_paomo_chang);
+  register_key_event(M_KEY_PAOMO,    0, MS2TICK(2000), 0, SHORT_KEY, short_m_key_paomo_paomo_duan);
+  register_key_event(M_KEY_PAOMO,    0, MS2TICK(3000), 0, LONG_KEY,  long_m_key_paomo_paomo_chang);
 
   register_key_event(M_KEY_YONGHU_2, 0, 0, 0, SHORT_KEY_IMMEDIATELY, app_low_bat_check);
-  register_key_event(M_KEY_YONGHU_2, 0, MS2TICK(3000), 0, SHORT_KEY, short_m_key_yonghu2_yonghuxianshi);
-  register_key_event(M_KEY_YONGHU_2, 0, MS2TICK(5000), 0, LONG_KEY,  long_m_key_yonghu2_yonghujiyi);
+  register_key_event(M_KEY_YONGHU_2, 0, MS2TICK(2000), 0, SHORT_KEY, short_m_key_yonghu2_yonghuxianshi);
+  register_key_event(M_KEY_YONGHU_2, 0, MS2TICK(3000), 0, LONG_KEY,  long_m_key_yonghu2_yonghujiyi);
 }

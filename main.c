@@ -114,17 +114,22 @@ void high_level_low_pow_check()
     stop_low_bat_check();
     if(is_low_power(THRESHOLD)){
       low_power = 1;
+      HalLedSet(LED_SHUIWEN_INDICATE_RED, HAL_LED_MODE_OFF);
       HalLedBlink(LED_SHUIWEN_INDICATE_BLUE, 10, 50, MS2TICK(1000));
       low_bat_time_ref = clock_time();
     }
   }
 
   if(low_power){
-    if(n_clock_time_exceed(low_bat_time_ref, 10000000))//10S
+    if(n_clock_time_exceed(low_bat_time_ref, 10000000)){//10S
       low_power = 0;
+      display_led();
+    }
   }
 }
-
+//没有按键操作，没有灯亮，立即休眠
+//低电压报警，水温灯闪烁报警，低电压报警时间之内，按下水温键，档位加，水温灯依然指示报警，报警时间结束，水温灯显示最新的档位。
+//配对结束之后，立即进入休眠
 int main(void)
 {
   blc_pm_select_internal_32k_crystal();
@@ -158,7 +163,7 @@ int main(void)
   if(!is_wakeup_from_sleep())
     HalLedInit();
 
-//  ev_on_timer(key_process, NULL, KEY_PROCESS_TIME);
+  ev_on_timer(key_process, NULL, KEY_PROCESS_TIME);
 
   ev_on_timer(HalLedUpdate, clr_display_flag, LED_UPDATE_PROCESS_TIME);
 
@@ -181,15 +186,11 @@ int main(void)
   while(1){
     poll_key_event();
 
-	key_process(NULL);
-
-//	HalLedUpdate(clr_display_flag);
-
     ev_process_timer();
 
     high_level_low_pow_check();
 
-    if(poll_idle_time()){
+    if(poll_idle_time() || !is_wakeup_from_sleep()){
       HalLedSet(HAL_LED_ALL, HAL_LED_MODE_OFF);
       gpio_key_sleep_setup();
       dc_shutdown();

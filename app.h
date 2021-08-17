@@ -63,7 +63,7 @@ typedef struct {
 #define SLEEP_WAIT_TIME 15000//MS
 
 #define ID_Flash_Addr	0x020000 //address store id
-#define VAL_ADDRESS     0x021000 //address store global var ,zuowen fenwen etc
+#define VAL_ADDRESS   0x021000 //address store global var ,zuowen fenwen etc
 
 #define USER1_VAL_ADDRESS 0x022000
 #define USER2_VAL_ADDRESS 0x023000
@@ -79,5 +79,7 @@ typedef struct {
 #define MAX_EVENT       30//the number is the register_key_event call times
 extern void app_init();
 extern void clr_display_flag();
+extern void display_led();
+extern bool is_set_display_flag();
 
 #endif
